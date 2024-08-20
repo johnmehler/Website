@@ -6,7 +6,7 @@
     <title>Personal Website</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='resume.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='content.css') }}">
 </head>
 <body>
     <!-- Main Content -->
@@ -23,7 +23,7 @@
 
     <!-- Resume Content -->
     <section class="resume">
-        <div class="resume-container">
+        <div class="content-container">
             {% include '/resume/left.html' %}
             {% include '/resume/middle.html' %}
             {% include '/resume/right.html' %}

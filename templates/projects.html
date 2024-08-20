@@ -6,15 +6,12 @@
     <title>Personal Website</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='content.css') }}">
 </head>
 <body>
     <!-- Main Content -->
     <main>
         <div class="header-content"></div>
-            <div class="header-title">
-                <h1>Projects</h1>
-            </div>
-
             <div class="header-buttons">
                 <a href="{{ url_for('index') }}">Home</a>
                 <a href="{{ url_for('resume') }}">Resume</a>
@@ -25,17 +22,14 @@
     </main>
 
     <!-- Content Section -->
-    <section>
-        <h2>My Projects</h2>
-        <p>Here are some of the projects I've worked on:</p>
-        <!-- List your projects here -->
-        <ul>
-            <li>Project 1: Description of project 1.</li>
-            <li>Project 2: Description of project 2.</li>
-            <li>Project 3: Description of project 3.</li>
-        </ul>
+    <section class="projects">
+        <div class="content-container">
+            {% include '/projects/left.html' %}
+            {% include '/projects/middle.html' %}
+            {% include '/projects/right.html' %}
+        </div>
     </section>
-
+    
     <!-- Footer Section -->
     <footer class="site-footer">
         <p>&copy; 2024 John Mehler</p>
