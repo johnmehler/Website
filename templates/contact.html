@@ -11,10 +11,6 @@
     <!-- Main Content -->
     <main>
         <div class="header-content"></div>
-            <div class="header-title">
-                <h1>Contact</h1>
-            </div>
-
             <div class="header-buttons">
                 <a href="{{ url_for('index') }}">Home</a>
                 <a href="{{ url_for('resume') }}">Resume</a>
@@ -36,8 +32,7 @@
     </section>
 
     <!-- Footer Section -->
-    <footer class="site-footer">
-        <p>&copy; 2024 John Mehler</p>
-    </footer>
+    {% include 'footer.html' %}
+
 </body>
 </html>
