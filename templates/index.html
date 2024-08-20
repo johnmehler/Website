@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Website</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}">
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="site-header">
+        <nav class="header-buttons">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('resume') }}">Resume</a>
+            <a href="{{ url_for('projects') }}">Projects</a>
+            <a href="{{ url_for('contact') }}">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Main Content Section -->
+    <main class="main-content">
+        <div class="intro">
+            <h1>Hi, I'm John.</h1>
+        </div>
+        <div class="profile-picture">
+            <img src="/static/images/headshot.jpg" alt="John Mehler's Headshot">
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="site-footer">
+        <p>&copy; 2024 John Mehler</p>
+    </footer>
+</body>
+</html>

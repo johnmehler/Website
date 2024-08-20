@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Website</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}">
+</head>
+<body>
+    <!-- Main Content -->
+    <main>
+        <div class="header-content"></div>
+            <div class="header-title">
+                <h1>Contact</h1>
+            </div>
+
+            <div class="header-buttons">
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('resume') }}">Resume</a>
+                <a href="{{ url_for('projects') }}">Projects</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Content Section -->
+    <section>
+        <h2>Get in Touch</h2>
+        <p>If you'd like to get in touch with me, please use the following methods:</p>
+        <ul>
+            <li>Email: <a href="mailto:john@example.com">john@example.com</a></li>
+            <li>LinkedIn: <a href="https://www.linkedin.com/in/johnmehler">John Mehler</a></li>
+            <li>Twitter: <a href="https://twitter.com/johnmehler">John Mehler</a></li>
+        </ul>
+    </section>
+
+    <!-- Footer Section -->
+    <footer class="site-footer">
+        <p>&copy; 2024 John Mehler</p>
+    </footer>
+</body>
+</html>
