@@ -26,7 +26,7 @@ h2 {
 }
 
 h3 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     margin-bottom: 5px;
     color: #2b3a42; /* Dark greenish-gray */
 }
@@ -69,19 +69,45 @@ ul li {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.experience-item h3 {
-    margin-bottom: 5px;
+.experience-content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start; /* Align content to the top */
+}
+
+.text-content {
+    margin-top: 0; /* Remove any default margin */
+    padding-top: 0; /* Ensure there's no padding at the top */
+}
+
+.experience-item h3, 
+.experience-item p {
+    margin-left: 10px;
+    margin-top: 0; /* Remove any default top margin */
     color: #2b3a42; /* Dark greenish-gray */
 }
 
-.experience-item p {
-    margin: 0;
-    color: #333;
-}
-
-.experience-item .location-date {
-    font-style: italic;
+.location-date {
     color: #4f5d75; /* Soft grey */
     margin-top: 5px;
     margin-bottom: 10px;
+}
+
+.company-logo {
+    width: 20%; /* Make the logo take up 40% of the container's width */
+    height: auto; /* Maintain aspect ratio */
+    margin-left: 10px;
+    align-self: center; /* Center the logo vertically */
+    object-fit: contain; /* Ensure the logo scales within the container */
+}
+
+.certification-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Space between images */
+}
+
+.certification-logo {
+    width: 100px; /* Adjust the width as needed */
+    height: auto; /* Maintain aspect ratio */
 }
