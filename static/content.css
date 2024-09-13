@@ -54,6 +54,21 @@ ul li {
     color: #2b3a42; /* Soft grey */
 }
 
+ul li a {
+    color: #2b3a42; /* Link color */
+    text-decoration: none; /* Remove underline */
+}
+
+ul li a:visited {
+    color: #2b3a42; /* Ensure visited links retain the same color */
+}
+
+ul li a:hover,
+ul li a:focus {
+    color: #6b7a82;
+}
+
+
 /* Experience Items */
 .experience-item {
     border: 1px solid #d3e0dc; /* Light greyish-green */
