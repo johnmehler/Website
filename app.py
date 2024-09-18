@@ -14,9 +14,9 @@ def resume():
 def projects():
     return render_template('projects.html')
 
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
+@app.route('/Temp')
+def Temp():
+    return render_template('Temp.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

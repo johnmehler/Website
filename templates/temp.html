@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Decoder</title>
+      <style>
+         body {
+         font-family: Arial, sans-serif;
+         max-width: 600px;
+         margin: 0 auto;
+         padding: 20px;
+         }
+         input, button {
+         margin: 10px 0;
+         padding: 5px;
+         }
+         #outputText {
+         margin-top: 20px;
+         white-space: pre-wrap;
+         }
+         .error {
+         color: red;
+         font-weight: bold;
+         }
+      </style>
+   </head>
+   <body>
+      <h1>Decoder</h1>
+      <input type="text" id="inputText" placeholder="Enter encoded string">
+      <button id="decodeButton">Decode</button>
+      <pre id="outputText"></pre>
+      <script>
+         // Define the substitution keys
+         const keys = [
+         "T=A,E,J,T,X",  // Key for 'T'
+         "I=B,G,I,F,W",  // Key for 'I'
+         "Y=C,D,N,U,Y",  // Key for 'Y'
+         "L=F,L,O,Q,V",  // Key for 'L'
+         "R=R",          // Key for 'R'
+         "H=H,K,M,S"     // Key for 'H'
+         ];
+         
+         // Create a dictionary to map each character to its possible substitutions
+         const subDict = {};
+         keys.forEach(key => {
+         const [char, subs] = key.split('=');
+         subDict[char] = subs.split(',');
+         });
+         
+         // Helper function to generate all possible combinations (similar to itertools.product)
+         function* cartesianProduct(...arrays) {
+         const [head, ...tail] = arrays;
+         const remainder = tail.length > 0 ? cartesianProduct(...tail) : [[]];
+         for (let r of remainder) for (let h of head) yield [h, ...r];
+         }
+         
+         // Function to generate all possible combinations for a single word
+         function generateCombinations(word, subDict) {
+         const possibleSubs = Array.from(word.toUpperCase()).map(char => subDict[char] || [char]);
+         return Array.from(cartesianProduct(...possibleSubs)).map(comb => comb.join('').toLowerCase());
+         }
+         
+         // Function to handle multiple words and collect all matches
+         function decodeString(inputString, subDict, dictionary) {
+         const words = inputString.split(' ');
+         const allMatches = [];
+         
+         for (const word of words) {
+         const possibleWords = generateCombinations(word, subDict);
+         const matches = possibleWords.filter(example => dictionary.includes(example));
+         
+         if (matches.length > 0) {
+             console.log(`Match found for '${word}': ${matches.join(', ')}`);
+             allMatches.push(matches);
+         } else {
+             allMatches.push([`No match for '${word}'`]);
+         }
+         }
+         
+         return allMatches;
+         }
+         
+         // Function to load dictionary from ../scripts/words.txt
+         async function loadDictionary() {
+             try {
+               const response = await fetch('/static/words.txt');
+                 if (!response.ok) {
+                     throw new Error(`HTTP error! status: ${response.status}`);
+                 }
+                 const text = await response.text();
+                 return text.toLowerCase().split('\n').map(word => word.trim());
+             } catch (error) {
+                 console.error("Failed to load dictionary:", error);
+                 let errorMessage = "Failed to load dictionary. ";
+                 if (error.message.includes("Failed to fetch")) {
+                     errorMessage += "This might be due to CORS restrictions when running locally. " +
+                                     "Try using a local server (e.g., Python's http.server or Node.js' http-server).";
+                 } else {
+                     errorMessage += "Please check if words.txt is in the scripts/ directory and accessible.";
+                 }
+                 document.getElementById('outputText').innerHTML = `<span class="error">${errorMessage}</span>`;
+                 return [];
+             }
+         }
+
+         // Main function to run the decoder
+         async function runDecoder() {
+             const dictionary = await loadDictionary();
+             if (dictionary.length === 0) {
+                 // Error message is already set in loadDictionary function
+                 return;
+             }
+
+             const inputString = document.getElementById('inputText').value;
+             const decodedMatches = decodeString(inputString, subDict, dictionary);
+
+             let output = '';
+             decodedMatches.forEach((matches, i) => {
+                 output += `Matches for word ${i + 1}: ${matches.join(', ')}\n`;
+             });
+
+             document.getElementById('outputText').textContent = output;
+         }
+
+         // Add event listener to the button
+         document.getElementById('decodeButton').addEventListener('click', runDecoder);
+
+         // Initial dictionary load attempt
+         loadDictionary().then(dictionary => {
+             if (dictionary.length > 0) {
+                 document.getElementById('outputText').textContent = "Dictionary loaded successfully. Ready to decode!";
+             }
+         });
+      </script>
+   </body>
+</html>
