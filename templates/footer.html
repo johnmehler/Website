@@ -8,10 +8,8 @@
         <a href="https://github.com/johnmehler/" target="_blank">
             <img src="{{ url_for('static', filename='images/github.png') }}" alt="GitHub">
         </a>
-        <a href="{{ url_for('static', filename='cv.pdf') }}" download="cv.pdf">
-            <button type="button">
-                <img src="{{ url_for('static', filename='images/pdf-icon.png') }}" alt="Resume"> Download CV
-            </button>
+        <a href="{{ url_for('static', filename='cv.pdf') }}" download="John Mehler CV.pdf" class="download-link">
+            <img src="{{ url_for('static', filename='images/pdf-icon.png') }}" alt="Download CV" class="pdf-icon">
         </a>
     </div>
 </footer>
