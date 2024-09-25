@@ -8,10 +8,14 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='./css/header.css') }}">
 </head>
 <body>
-    <!-- Header Section -->
-    <header class="site-header">
-        {% include 'header.html' %}
-    </header>
+    <main>
+        <!-- Header Section -->
+        <div class="header-content">
+            <div class="header-buttons">
+                {% include 'header.html' %}
+            </div>
+        </div>
+    </main>
 
     <!-- Main Content Section -->
     <main class="main-content">

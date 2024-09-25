@@ -2,6 +2,9 @@
 .site-header {
     position: relative;
     padding: 20px;
+    background-color: #d3e0dc; /* Light greyish-green */
+    color: #333;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Adds a slight shadow */
 }
 
 .header-title {
@@ -53,11 +56,6 @@
     background-color: #4f5d75; /* Add a background color to ensure visibility */
     color: #d3e0dc; /* Light greyish-green */
     z-index: 1000; /* Ensure it stays above other elements */
-}
-
-/* Ensure there is space at the bottom so content isn't hidden behind the footer */
-body {
-    padding-bottom: 80px; /* Adjust to match or exceed the footer height */
 }
 
 .footer-left p {
