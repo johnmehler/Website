@@ -8,127 +8,133 @@
     <input type="text" id="encodeInput" placeholder="Enter string to encode">
     <button id="encodeButton">Encode</button>
     <pre id="encodeText"></pre>
-    
     <!-- Decoder -->
     <input type="text" id="inputText" placeholder="Enter string to decode">
     <button id="decodeButton">Decode</button>
     <pre id="decodeOutput"></pre>
-    
     <script>
-        // Define the substitution keys
-        const keys = [
-            "T=A,E,J,T,X",  // Key for 'T'
-            "I=B,G,I,F,W",  // Key for 'I'
-            "Y=C,D,N,U,Y",  // Key for 'Y'
-            "L=F,L,O,Q,V",  // Key for 'L'
-            "R=R",          // Key for 'R'
-            "H=H,K,M,S"     // Key for 'H'
-        ];
-    
-        // Create a dictionary for decoding (character to possible substitutions)
-        const subDict = {};
-        keys.forEach(key => {
-            const [char, subs] = key.split('=');
-            subDict[char] = subs.split(',');
-        });
-    
-        // Create a dictionary for encoding (map right-side values to left-side)
-        const encodeDict = {};
-        keys.forEach(key => {
-            const [leftValue, rightValues] = key.split('=');
-            rightValues.split(',').forEach(rightValue => {
-                encodeDict[rightValue] = leftValue;
-            });
-        });
-    
-        // Encoder function
-        function encodeInput(inputString, encodeDict) {
-            let encodedResult = '';
-            inputString.toUpperCase().split('').forEach(char => {
-                if (encodeDict[char]) {
-                    encodedResult += encodeDict[char].toLowerCase();  // Replace with left-side value
-                } else {
-                    encodedResult += char.toLowerCase();  // Leave unchanged if not found
-                }
-            });
-            return encodedResult;
-        }
-    
-        // Set up encode button click event
-        document.getElementById('encodeButton').addEventListener('click', () => {
-            const inputString = document.getElementById('encodeInput').value;
-            const encodedOutput = encodeInput(inputString, encodeDict);
-            document.getElementById('encodeText').textContent = `Encoded response: ${encodedOutput}`;
-        });
-    
-        // Helper function to generate all possible combinations (for decoding)
-        function* cartesianProduct(...arrays) {
-            const [head, ...tail] = arrays;
-            const remainder = tail.length > 0 ? cartesianProduct(...tail) : [[]];
-            for (let r of remainder) for (let h of head) yield [h, ...r];
-        }
-    
-        // Generate possible substitutions for decoding
-        function generateCombinations(word, subDict) {
-            const possibleSubs = Array.from(word.toUpperCase()).map(char => subDict[char] || [char]);
-            return Array.from(cartesianProduct(...possibleSubs)).map(comb => comb.join('').toLowerCase());
-        }
-    
-        // Function to decode string and find matches in dictionary
-        async function decodeString(inputString, subDict, dictionary, outputCallback) {
-            const words = inputString.split(' ');
-            for (let i = 0; i < words.length; i++) {
-                const word = words[i];
-                const possibleWords = generateCombinations(word, subDict);
-                const matches = possibleWords.filter(example => dictionary.includes(example));
-                let result;
-                if (matches.length > 0) {
-                    result = `Matches for word ${i + 1} (${word}): ${matches.join(', ')}`;
-                } else {
-                    result = `No match for word ${i + 1} (${word})`;
-                }
-                outputCallback(result);
-                await new Promise(resolve => setTimeout(resolve, 10));
-            }
-        }
-    
-        // Load dictionary from /static/words.txt
-        async function loadDictionary() {
-            try {
-                const response = await fetch('/static/words.txt');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const text = await response.text();
-                return text.toLowerCase().split('\n').map(word => word.trim());
-            } catch (error) {
-                console.error("Failed to load dictionary:", error);
-                let errorMessage = "Failed to load dictionary. ";
-                if (error.message.includes("Failed to fetch")) {
-                    errorMessage += "This might be due to CORS restrictions when running locally. " +
-                                    "Try using a local server (e.g., Python's http.server or Node.js' http-server).";
-                } else {
-                    errorMessage += "Please check if words.txt is in the static/ directory and accessible.";
-                }
-                document.getElementById('decodeOutput').innerHTML = `<span class="error">${errorMessage}</span>`;
-                return [];
-            }
-        }
-    
-        // Main function to run the decoder
-        async function runDecoder() {
-            const dictionary = await loadDictionary();
-            if (dictionary.length === 0) return;
-    
-            const inputString = document.getElementById('inputText').value;
-            document.getElementById('decodeOutput').textContent = ''; // Clear previous output
-    
-            await decodeString(inputString, subDict, dictionary, (result) => {
-                document.getElementById('decodeOutput').textContent += result + '\n';
-            });
-        }
-    
-        // Add event listener to the decode button
-        document.getElementById('decodeButton').addEventListener('click', runDecoder);
+       // Define the substitution keys
+       const keys = [
+       "T=A,E,J,T,X",  // Key for 'T'
+       "I=B,G,I,F,W",  // Key for 'I'
+       "Y=C,D,N,U,Y",  // Key for 'Y'
+       "L=F,L,O,Q,V",  // Key for 'L'
+       "R=R",          // Key for 'R'
+       "H=H,K,M,S"     // Key for 'H'
+       ];
+       
+       // Create a dictionary for decoding (character to possible substitutions)
+       const subDict = {};
+       keys.forEach(key => {
+       const [char, subs] = key.split('=');
+       subDict[char] = subs.split(',');
+       });
+       
+       // Create a dictionary for encoding (map right-side values to left-side)
+       const encodeDict = {};
+       keys.forEach(key => {
+       const [leftValue, rightValues] = key.split('=');
+       rightValues.split(',').forEach(rightValue => {
+       encodeDict[rightValue] = leftValue;
+       });
+       });
+       
+       // Encoder function
+       function encodeInput(inputString, encodeDict) {
+       let encodedResult = '';
+       inputString.toUpperCase().split('').forEach(char => {
+       if (encodeDict[char]) {
+           encodedResult += encodeDict[char].toLowerCase();  // Replace with left-side value
+       } else {
+           encodedResult += char.toLowerCase();  // Leave unchanged if not found
+       }
+       });
+       return encodedResult;
+       }
+       
+       // Set up encode button click event
+       document.getElementById('encodeButton').addEventListener('click', () => {
+       const inputString = document.getElementById('encodeInput').value;
+       const encodedOutput = encodeInput(inputString, encodeDict);
+       document.getElementById('encodeText').textContent = `Encoded response: ${encodedOutput}`;
+       });
+       
+       // Check if a word matches the input string using the substitution rules
+       function matchesCipher(word, inputString, subDict) {
+       if (word.length !== inputString.length) {
+       return false;
+       }
+       for (let i = 0; i < word.length; i++) {
+       const cipherChar = inputString[i].toUpperCase();
+       const wordChar = word[i].toUpperCase();
+       
+       // If cipher character is not in subDict, it must match exactly
+       if (!subDict[cipherChar]) {
+           if (cipherChar !== wordChar) return false;
+       } 
+       // If cipher character has possible substitutions, check for match
+       else if (!subDict[cipherChar].includes(wordChar)) {
+           return false;
+       }
+       }
+       return true;
+       }
+       
+       // Function to decode string and find matches in the dictionary
+       async function decodeString(inputString, subDict, dictionary, outputCallback) {
+       const words = inputString.split(/[\s,\.]+/);
+       for (let i = 0; i < words.length; i++) {
+       const word = words[i];
+       const matches = dictionary.filter(dictWord => matchesCipher(dictWord, word, subDict));
+       let result;
+       if (matches.length > 0) {
+           result = `Matches for word ${i + 1} (${word}): ${matches.join(', ')}`;
+       } else {
+           result = `No match for word ${i + 1} (${word})`;
+       }
+       outputCallback(result);
+       await new Promise(resolve => setTimeout(resolve, 10));
+       }
+       }
+       
+       // Load dictionary from /static/words.txt
+       async function loadDictionary() {
+       try {
+       const response = await fetch('/static/words.txt');
+       if (!response.ok) {
+           throw new Error(`HTTP error! status: ${response.status}`);
+       }
+       const text = await response.text();
+       return text.toLowerCase().split('\n').map(word => word.trim());
+       } catch (error) {
+       console.error("Failed to load dictionary:", error);
+       let errorMessage = "Failed to load dictionary. ";
+       if (error.message.includes("Failed to fetch")) {
+           errorMessage += "This might be due to CORS restrictions when running locally. " +
+                           "Try using a local server (e.g., Python's http.server or Node.js' http-server).";
+       } else {
+           errorMessage += "Please check if words.txt is in the static/ directory and accessible.";
+       }
+       document.getElementById('decodeOutput').innerHTML = `<span class="error">${errorMessage}</span>`;
+       return [];
+       }
+       }
+       
+       // Main function to run the decoder
+       async function runDecoder() {
+       const dictionary = await loadDictionary();
+       if (dictionary.length === 0) return;
+       
+       const inputString = document.getElementById('inputText').value;
+       document.getElementById('decodeOutput').textContent = ''; // Clear previous output
+       
+       await decodeString(inputString, subDict, dictionary, (result) => {
+       document.getElementById('decodeOutput').textContent += result + '\n';
+       });
+       }
+       
+       // Add event listener to the decode button
+       document.getElementById('decodeButton').addEventListener('click', runDecoder);
+       
     </script>
-</div>
+ </div>
