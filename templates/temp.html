@@ -1,137 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Decoder</title>
-      <style>
-         body {
-         font-family: Arial, sans-serif;
-         max-width: 600px;
-         margin: 0 auto;
-         padding: 20px;
-         }
-         input, button {
-         margin: 10px 0;
-         padding: 5px;
-         }
-         #outputText {
-         margin-top: 20px;
-         white-space: pre-wrap;
-         }
-         .error {
-         color: red;
-         font-weight: bold;
-         }
-      </style>
-   </head>
-   <body>
-      <h1>Decoder</h1>
-      <input type="text" id="inputText" placeholder="Enter encoded string">
-      <button id="decodeButton">Decode</button>
-      <pre id="outputText"></pre>
-      <script>
-         // Define the substitution keys
-         const keys = [
-         "T=A,E,J,T,X",  // Key for 'T'
-         "I=B,G,I,F,W",  // Key for 'I'
-         "Y=C,D,N,U,Y",  // Key for 'Y'
-         "L=F,L,O,Q,V",  // Key for 'L'
-         "R=R",          // Key for 'R'
-         "H=H,K,M,S"     // Key for 'H'
-         ];
-         
-         // Create a dictionary to map each character to its possible substitutions
-         const subDict = {};
-         keys.forEach(key => {
-         const [char, subs] = key.split('=');
-         subDict[char] = subs.split(',');
-         });
-         
-         // Helper function to generate all possible combinations (similar to itertools.product)
-         function* cartesianProduct(...arrays) {
-         const [head, ...tail] = arrays;
-         const remainder = tail.length > 0 ? cartesianProduct(...tail) : [[]];
-         for (let r of remainder) for (let h of head) yield [h, ...r];
-         }
-         
-         // Function to generate all possible combinations for a single word
-         function generateCombinations(word, subDict) {
-         const possibleSubs = Array.from(word.toUpperCase()).map(char => subDict[char] || [char]);
-         return Array.from(cartesianProduct(...possibleSubs)).map(comb => comb.join('').toLowerCase());
-         }
-         
-         // Function to handle multiple words and collect all matches
-         function decodeString(inputString, subDict, dictionary) {
-         const words = inputString.split(' ');
-         const allMatches = [];
-         
-         for (const word of words) {
-         const possibleWords = generateCombinations(word, subDict);
-         const matches = possibleWords.filter(example => dictionary.includes(example));
-         
-         if (matches.length > 0) {
-             console.log(`Match found for '${word}': ${matches.join(', ')}`);
-             allMatches.push(matches);
-         } else {
-             allMatches.push([`No match for '${word}'`]);
-         }
-         }
-         
-         return allMatches;
-         }
-         
-         // Function to load dictionary from ../scripts/words.txt
-         async function loadDictionary() {
-             try {
-               const response = await fetch('/static/words.txt');
-                 if (!response.ok) {
-                     throw new Error(`HTTP error! status: ${response.status}`);
-                 }
-                 const text = await response.text();
-                 return text.toLowerCase().split('\n').map(word => word.trim());
-             } catch (error) {
-                 console.error("Failed to load dictionary:", error);
-                 let errorMessage = "Failed to load dictionary. ";
-                 if (error.message.includes("Failed to fetch")) {
-                     errorMessage += "This might be due to CORS restrictions when running locally. " +
-                                     "Try using a local server (e.g., Python's http.server or Node.js' http-server).";
-                 } else {
-                     errorMessage += "Please check if words.txt is in the scripts/ directory and accessible.";
-                 }
-                 document.getElementById('outputText').innerHTML = `<span class="error">${errorMessage}</span>`;
-                 return [];
-             }
-         }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Finder with Pattern Restriction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        #results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
 
-         // Main function to run the decoder
-         async function runDecoder() {
-             const dictionary = await loadDictionary();
-             if (dictionary.length === 0) {
-                 // Error message is already set in loadDictionary function
-                 return;
-             }
+<h1>Word Finder with Wildcards and Pattern Restriction</h1>
+<p>Enter letters (use '?' as a wildcard):</p>
+<input type="text" id="letters" placeholder="Enter letters" />
 
-             const inputString = document.getElementById('inputText').value;
-             const decodedMatches = decodeString(inputString, subDict, dictionary);
+<p>Pattern Restriction:</p>
+<input type="text" id="pattern" placeholder="Enter word format (optional)" />
 
-             let output = '';
-             decodedMatches.forEach((matches, i) => {
-                 output += `Matches for word ${i + 1}: ${matches.join(', ')}\n`;
-             });
+<br><br>
+<button onclick="findValidWords()">Find Words</button>
 
-             document.getElementById('outputText').textContent = output;
-         }
+<div id="results"></div>
 
-         // Add event listener to the button
-         document.getElementById('decodeButton').addEventListener('click', runDecoder);
+<script>
+    let wordList = [];
 
-         // Initial dictionary load attempt
-         loadDictionary().then(dictionary => {
-             if (dictionary.length > 0) {
-                 document.getElementById('outputText').textContent = "Dictionary loaded successfully. Ready to decode!";
-             }
-         });
-      </script>
-   </body>
+    // Fetch the word list from the file at '../static/words.txt'
+    async function loadWordList() {
+        try {
+            const response = await fetch('../static/words.txt');
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const text = await response.text();
+            // Split the text file by newlines to create the word list
+            wordList = text.split('\n').map(word => word.trim().toLowerCase());
+        } catch (error) {
+            console.error('Error fetching word list:', error);
+        }
+    }
+
+    // Call the function to load the word list when the page loads
+    window.onload = loadWordList;
+
+    // Function to find valid words using wildcards and the format pattern
+    function findValidWords() {
+        const input = document.getElementById('letters').value.toLowerCase();
+        const pattern = document.getElementById('pattern').value.toLowerCase();
+        const resultsDiv = document.getElementById('results');
+        const validWords = {};
+
+        if (wordList.length === 0) {
+            resultsDiv.innerHTML = 'Word list is not loaded yet.';
+            return;
+        }
+
+        // Count the number of wildcards and the available letters
+        const numWildcards = (input.match(/\?/g) || []).length;
+        const letterCounts = countLetters(input.replace(/\?/g, ''));
+
+        // Check each word in the word list
+        for (const word of wordList) {
+            if (canFormWord(word, letterCounts, numWildcards) && matchesPattern(word, pattern)) {
+                const wordLength = word.length;
+                if (!validWords[wordLength]) {
+                    validWords[wordLength] = [];
+                }
+                validWords[wordLength].push(word);
+            }
+        }
+
+        // Display results, grouped by word length
+        displayGroupedWords(validWords);
+    }
+
+    // Function to count the occurrences of each letter in a string
+    function countLetters(str) {
+        const counts = {};
+        for (const letter of str) {
+            counts[letter] = (counts[letter] || 0) + 1;
+        }
+        return counts;
+    }
+
+    // Function to check if a word can be formed using the given letters and wildcards
+    function canFormWord(word, letterCounts, wildcards) {
+        const wordCounts = countLetters(word);
+        let neededWildcards = 0;
+
+        for (const letter in wordCounts) {
+            const needed = wordCounts[letter];
+            const available = letterCounts[letter] || 0;
+            if (needed > available) {
+                neededWildcards += (needed - available);
+            }
+            if (neededWildcards > wildcards) {
+                return false;  // More wildcards needed than available
+            }
+        }
+
+        return true;
+    }
+
+    // Function to check if a word matches the specified pattern
+    function matchesPattern(word, pattern) {
+        if (!pattern) return true;  // No pattern means all words are valid
+
+        if (word.length < pattern.length) {
+            // Allow shorter words as long as the fixed letters in the pattern match
+            return wordMatchesShorterPattern(word, pattern);
+        }
+
+        // Check full pattern
+        for (let i = 0; i < pattern.length; i++) {
+            const patternChar = pattern[i];
+            if (patternChar !== '?' && word[i] !== patternChar) {
+                return false;  // If the pattern specifies a letter, it must match the corresponding letter in the word
+            }
+        }
+
+        return true;  // If all positions match the pattern
+    }
+
+    // Function to match shorter words against longer patterns (e.g., 'L??????' should match 'light')
+    function wordMatchesShorterPattern(word, pattern) {
+        for (let i = 0; i < word.length; i++) {
+            const patternChar = pattern[i];
+            if (patternChar !== '?' && word[i] !== patternChar) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Function to display words grouped by their length
+    function displayGroupedWords(validWords) {
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';  // Clear previous results
+
+        const lengths = Object.keys(validWords).map(Number).sort((a, b) => b - a);  // Sort by word length descending
+
+        if (lengths.length === 0) {
+            resultsDiv.innerHTML = 'No valid words found.';
+            return;
+        }
+
+        lengths.forEach(length => {
+            const words = validWords[length].sort();  // Sort alphabetically
+            const wordGroupDiv = document.createElement('div');
+            wordGroupDiv.innerHTML = `<strong>${length}-letter words:</strong> ${words.join(', ')}`;
+            resultsDiv.appendChild(wordGroupDiv);
+        });
+    }
+</script>
+
+</body>
 </html>

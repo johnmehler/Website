@@ -1,0 +1,153 @@
+/* General Styles */
+body {
+    background-color: #d3e0dc; /* Light greyish-green */
+    color: #333;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h2, h3 {
+    color: #2b3a42; /* Dark greenish-gray */
+}
+
+h2 {
+    font-size: 1.7rem;
+    margin-bottom: 10px;
+}
+
+h3 {
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+}
+
+h3 a {
+    text-decoration: none;
+    color: #2b3a42;
+}
+
+h3 a:visited {
+    color: #2b3a42;
+}
+
+h3 a:hover, h3 a:focus {
+    color: #6b7a82;
+}
+
+/* Main Content */
+.main-content,
+.content-container {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center;
+    justify-content: center;
+    width: 85%;
+    margin: 80px auto 0;
+    padding-bottom: 50px;
+}
+
+/* Column Content */
+.content-column {
+    width: 100%; /* Full width for single-column layout */
+    padding: 20px;
+    background-color: #b0c4b1; /* Soft green */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* Add margin between stacked sections */
+}
+
+/* List Styling */
+ul {
+    padding-left: 20px;
+}
+
+ul li {
+    margin-bottom: 10px;
+    color: #2b3a42; /* Soft grey */
+}
+
+ul li a {
+    text-decoration: none;
+    color: #2b3a42;
+}
+
+ul li a:visited {
+    color: #2b3a42;
+}
+
+ul li a:hover, ul li a:focus {
+    color: #6b7a82;
+}
+
+/* Experience Items */
+.experience-item {
+    border: 1px solid #d3e0dc;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #d3e0dc;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.experience-item:hover {
+    background-color: #c0d4c1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.experience-content {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.text-content {
+    margin: 0; /* Remove default margin */
+}
+
+/* Specific Text Content for Experience Items */
+.experience-item h3, 
+.experience-item p {
+    margin-left: 10px;
+    color: #2b3a42;
+}
+
+.location-date {
+    color: #4f5d75;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+/* Certification Images */
+.certification-images {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Space between images */
+}
+
+.certification-logo {
+    width: 100px;
+    height: auto; /* Maintain aspect ratio */
+}
+
+/* Profile Picture */
+.profile-picture {
+    margin: 20px 0;
+}
+
+.profile-picture img {
+    border-radius: 50%;
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer */
+.site-footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #4f5d75; /* Soft grey */
+    color: #d3e0dc; /* Light greyish-green */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}

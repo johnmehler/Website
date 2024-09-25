@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Personal Website</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='header.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='content.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='./css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='./css/header.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='./css/projects.css') }}">
 </head>
 <body>
     <!-- Main Content -->
     <main>
-        <div class="header-content"></div>
+        <div class="header-content">
             <div class="header-buttons">
                 <a href="{{ url_for('index') }}">Home</a>
                 <a href="{{ url_for('resume') }}">Resume</a>
@@ -23,10 +23,11 @@
 
     <!-- Content Section -->
     <section class="projects">
-        <div class="content-container">
-            {% include '/projects/left.html' %}
-            {% include '/projects/middle.html' %}
-            {% include '/projects/right.html' %}
+        <div class="content-container single-column">
+            <!-- Including the project sections in a single column layout -->
+            {% include '/projects/personal-site.html' %}
+            {% include '/projects/rss.html' %}
+            {% include '/projects/abyss.html' %}
         </div>
     </section>
     
