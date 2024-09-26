@@ -16,7 +16,11 @@ def projects():
 
 @app.route('/scrabble')
 def scrabble():
-    return render_template('scrabble.html')
+    return render_template('/projects/scrabble.html')
+
+@app.route('/abyss')
+def abyss():
+    return render_template('projects/abyss.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

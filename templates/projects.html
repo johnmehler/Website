@@ -22,10 +22,33 @@
     <section class="projects">
         <div class="content-container single-column">
             <!-- Including the project sections in a single column layout -->
-            {% include '/projects/personal-site.html' %}
-            {% include '/projects/rss.html' %}
-            {% include '/projects/abyss.html' %}
-            {% include '/projects/scrabber.html' %}
+            <div class="content-column">
+                <h3>
+                    <a href="{{ url_for('index') }}" target="_blank" rel="noopener noreferrer">Personal Site</a> |
+                    <a href="https://github.com/johnmehler/Website" target="_blank" rel="noopener noreferrer">Source Code</a>
+                </h3>
+                <p>This site is a personal portfolio built as a static website using HTML and CSS.</p>
+            </div>
+            <div class="content-column">
+                <h3>
+                    <a href="https://reisman.org/jmehler/rss/" target="_blank" rel="noopener noreferrer">RSS Reader</a> | 
+                    <a href="https://github.com/johnmehler/rss-reader/" target="_blank" rel="noopener noreferrer">Source Code</a>
+                </h3>
+                <p class="description">This is an RSS feed reader. It's a simple app that lists articles from sources I find interesting in chronological order.</p>
+            </div>
+            <div class="content-column">
+                <h3>
+                   <a href="{{ url_for('abyss') }}" target="_blank" rel="noopener noreferrer">Patrick of the Abyss Decrypter</a> | 
+                   <a href="https://github.com/johnmehler/patrick-of-the-abyss" target="_blank" rel="noopener noreferrer">Source Code</a>
+                </h3>
+                <p class="description">Someone made a parody BGA account <a href=https://boardgamearena.com/player?id=96600706 target="_blank">here</a> where he speaks in code (not me) (my elo is much higher). Use this to communicate with him:</p>
+             </div>
+             <div class="content-column">
+                <h3>
+                    <a href="{{ url_for('scrabble') }}" target="_blank" target="_blank">Scrabble Cheat++</a>
+                </h3>
+                <p class="description">This app finds scrabble words, but also has a feature to search for words for specific slots on the board.</p>
+            </div>            
         </div>
     </section>
     
